@@ -169,7 +169,11 @@ library SquadUtils
             if groupSize < 2 then 
                 return 0.0
             endif 
+
             if damageType != DAMAGE_TYPE_NORMAL then 
+                return 0.0
+            endif 
+            if weaponType == WEAPON_TYPE_WHOKNOWS then 
                 return 0.0
             endif 
             if GetRandomReal(0, 1) < squad_shared_damage_activation_chance then 
@@ -184,7 +188,11 @@ library SquadUtils
             endif 
             set ratio = GetRandomReal(squad_min_percent_of_shared_damage, squad_max_percent_of_shared_damage) 
             set sharedDamage = incomingDamage * ratio 
-            if sharedDamage >= squad_min_amount_of_shared_damage and defenderLife > 0 then 
+            if sharedDamage < squad_min_amount_of_shared_damage then 
+                return 0.0
+            endif 
+
+            if defenderLife > 0 then 
                 set splitCount = groupSize - 1 
                 if(splitCount >= 2) then 
                     set splitCount = 2 - GetRandomInt(0, 1) 
