@@ -650,10 +650,13 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
         local real maxRange
         local group distantMeleeMembers
         local group distantRangedMembers
+        local string order
 
         if SquadUtils.IsRangedUnit(squadMember) then
             return false
         endif
+
+        set order = OrderId2String(GetIssuedOrderId())
 
         set maxRange = squad_combat_overextension_distance + 30 * squadSize
         set distantMeleeMembers = SquadUtils.GetDistantGroupMembers(squadMember, squad, maxRange, false)
@@ -661,7 +664,7 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
 
         loop
             exitwhen i > BlzGroupGetSize(distantMeleeMembers)
-            if GetUnitCurrentOrder(BlzGroupUnitAt(distantMeleeMembers, i)) != 851971 then
+            if order != "smart" and order != "attack" then
                 call IndividualOrderTarget(BlzGroupUnitAt(distantMeleeMembers, i), "smart", squadMember)
             endif
 
@@ -670,7 +673,7 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
         set i = 0
         loop
             exitwhen i > BlzGroupGetSize(distantRangedMembers)
-            if GetUnitCurrentOrder(BlzGroupUnitAt(distantRangedMembers, i)) != 851971 then
+            if order != "smart" and order != "attack" then
                 call IndividualOrderTarget(BlzGroupUnitAt(distantRangedMembers, i), "smart", squadMember)
             endif
 
