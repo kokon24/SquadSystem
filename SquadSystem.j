@@ -652,6 +652,10 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
         local group distantRangedMembers
         local string order
 
+        if squadSize > 1 then
+            return false
+        endif
+
         if SquadUtils.IsRangedUnit(squadMember) then
             return false
         endif
