@@ -14,65 +14,65 @@
 //  *   integer array squadSize
 //          - Squad size for squads generated with squadUnits
 //
-//  *   integer squadUnits_max
+//  *   integer SQAD_MAX_UNIT_COUNT
 //          - Maximum index of squadUnits and squadSize
 //
-//  *   string squad_sfx_path
+//  *   string SQUAD_SFX_PATH
 //          - Default path for special effect to attach to squad units
 //          - Set to null to disable special effects
 //          - Default: null
 //
-//  *   string squad_sfx_attach
+//  *   string SQUAD_SFX_ATTACH
 //          - Default attachment point for special effect to attach to squad units
 //          - Default: "overhead"
 //
-//  *   string squad_leader_sfx_path
+//  *   string SQUAD_LEADER_SFX_PATH
 //          - Default path for special effect to attach to squad leader
 //          - Set to null to use same effect as regular squad members
 //          - Default: null
 //
-//  *   string squad_leader_sfx_attach
+//  *   string SQUAD_LEADER_SFX_ATTACH
 //          - Default attachment point for special effect to attach to squad leader
 //          - Default: "overhead"
 //
-//  *   integer squad_disband_multiplier
+//  *   integer SQUAD_DISBAND_MULTIPLIER
 //          - Multiplier that determines the chance of a squad disbanding when one of its units dies
-//          - Formula: squad_disband_multiplier/squad_size
+//          - Formula: SQUAD_DISBAND_MULTIPLIER/squad_size
 //          - Set to 0 to disable disbanding
 //          - Default: 0
 //
-//  *   real squad_flee_distance
+//  *   real SQUAD_FLEE_DISTANCE
 //          - Distance units of a disbanded squad will flee in a random direction
 //          - set to 0 to disable fleeing
 //          - Default: 0
 //
-//  *   real squad_combat_overextension_distance
+//  *   real SQUAD_COMBAT_OVEREXTENSION_DISTANCE
 //          - Squad members will try to come closer to each other if they are too far away during comabat
 //          - Default: 300
 //            (+ 30 per unit)
 //
-//  *   boolean leader_death_disband
+//  *   boolean LEADER_DEATH_DISBAND
 //          - If true, squads will disband if their leader dies
 //          - Default: false
 //
-//  *   boolean squad_shared_damage_enabled
+//  *   boolean SQUAD_SHARED_DAMAGE_ENABLED
 //          - damage will be shared via EVENT_PLAYER_UNIT_DAMAGING. If you use custom damage engines you may want to keep it disabled and call SquadUtils.ShareGroupDamage() manually
 //          - Default: true
 //
-//  *   real squad_shared_damage_activation_chance
+//  *   real SQUAD_SHARED_DAMAGE_ACTIVATION_CHANCE
 //          - Chance that part of the incoming attack damage is distributed between other squad members
 //          - Default: 0.50 (50%)
 //
-//  *   real squad_max_percent_of_shared_damage
-//          - Direct defender damage is reduced up to squad_max_percent_of_shared_damage
+//  *   real SQUAD_MAX_PERCENT_OF_SHARED_DAMAGE
+//          - Direct defender damage is reduced up to SQUAD_MAX_PERCENT_OF_SHARED_DAMAGE
 //          - Shared damage does not cause death. Only DAMAGE_TYPE_NORMAL is split
 //          - Default: 0.50 (50%)
 //
-//  *   real squad_min_percent_of_shared_damage
+//  *   real SQUAD_MIN_PERCENT_OF_SHARED_DAMAGE
 //          - Default: 0.25 (25%)
 //
-//  *   real squad_min_amount_of_shared_damage
-//          - If shared damage is less than squad_min_amount_of_shared_damage it will not be deducted from the original defender
+//  *   real SQUAD_MIN_AMOUNT_OF_SHARED_DAMAGE
+//          - If shared damage is less than SQUAD_MIN_AMOUNT_OF_SHARED_DAMAGE it will not be deducted from the original defender
 //          - Don't set it to 0. Must have at least some positive value
 //          - Default: 3
 //
@@ -131,20 +131,20 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
         // Config
         integer array squadUnits
         integer array squadSize
-        integer squadUnits_max = -1
-        string squad_sfx_path = null
-        string squad_sfx_attach = "overhead"
-        string squad_leader_sfx_path = null
-        string squad_leader_sfx_attach = "overhead"
-        integer squad_disband_multiplier = 0
-        real squad_flee_distance = 0
-        real squad_combat_overextension_distance = 300
-        boolean leader_death_disband = false
-        boolean squad_shared_damage_enabled = true
-        real squad_shared_damage_activation_chance = 0.5
-        real squad_max_percent_of_shared_damage = 0.5
-        real squad_min_percent_of_shared_damage = 0.25
-        real squad_min_amount_of_shared_damage = 3.0
+        integer SQAD_MAX_UNIT_COUNT = -1
+        string SQUAD_SFX_PATH = null
+        string SQUAD_SFX_ATTACH = "overhead"
+        string SQUAD_LEADER_SFX_PATH = null
+        string SQUAD_LEADER_SFX_ATTACH = "overhead"
+        integer SQUAD_DISBAND_MULTIPLIER = 0
+        real SQUAD_FLEE_DISTANCE = 0
+        real SQUAD_COMBAT_OVEREXTENSION_DISTANCE = 300
+        boolean LEADER_DEATH_DISBAND = false
+        boolean SQUAD_SHARED_DAMAGE_ENABLED = true
+        real SQUAD_SHARED_DAMAGE_ACTIVATION_CHANCE = 0.5
+        real SQUAD_MAX_PERCENT_OF_SHARED_DAMAGE = 0.6
+        real SQUAD_MIN_PERCENT_OF_SHARED_DAMAGE = 0.3
+        real SQUAD_MIN_AMOUNT_OF_SHARED_DAMAGE = 3.0
         
         // Misc
         private group pauseSelection = CreateGroup()
@@ -232,13 +232,13 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
         if HaveSavedString(htbSquad, squadHandleId, SFX_PATH) then
             set sfx_path = LoadStr(htbSquad, squadHandleId, SFX_PATH)
         else
-            set sfx_path = squad_sfx_path
+            set sfx_path = SQUAD_SFX_PATH
         endif
         // Get SFX attachment point
         if HaveSavedString(htbSquad, squadHandleId, SFX_ATTACH) then
             set sfx_attach = LoadStr(htbSquad, squadHandleId, SFX_ATTACH)
         else
-            set sfx_attach = squad_sfx_attach
+            set sfx_attach = SQUAD_SFX_ATTACH
         endif
         
         // Add effect
@@ -267,13 +267,13 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
         if HaveSavedString(htbSquad, squadHandleId, LEADER_SFX_PATH) then
             set sfx_path = LoadStr(htbSquad, squadHandleId, LEADER_SFX_PATH)
         else
-            set sfx_path = squad_leader_sfx_path
+            set sfx_path = SQUAD_LEADER_SFX_PATH
         endif
         // Get SFX attachment point
         if HaveSavedString(htbSquad, squadHandleId, LEADER_SFX_ATTACH) then
             set sfx_attach = LoadStr(htbSquad, squadHandleId, LEADER_SFX_ATTACH)
         else
-            set sfx_attach = squad_leader_sfx_attach
+            set sfx_attach = SQUAD_LEADER_SFX_ATTACH
         endif
         
         // Add/replace effect
@@ -298,13 +298,13 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
         local integer index = 0
         local integer size_index = 0
         
-        if squadUnits_max >= 0 then
+        if SQAD_MAX_UNIT_COUNT >= 0 then
             set typeId = GetUnitTypeId(whichUnit)
             
             loop
                 set isSquadUnit = squadUnits[index] == typeId
                 set index = index + 1
-                exitwhen index > squadUnits_max or isSquadUnit
+                exitwhen index > SQAD_MAX_UNIT_COUNT or isSquadUnit
             endloop
             
             if isSquadUnit then
@@ -399,12 +399,12 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
                 if HaveSavedString(htbSquad, squadHandleId, SFX_PATH) then
                     set path = LoadStr(htbSquad, squadHandleId, SFX_PATH)
                 else
-                    set path = squad_sfx_path
+                    set path = SQUAD_SFX_PATH
                 endif
                 if HaveSavedString(htbSquad, squadHandleId, SFX_ATTACH) then
                     set attach = LoadStr(htbSquad, squadHandleId, SFX_ATTACH)
                 else
-                    set attach = squad_sfx_attach
+                    set attach = SQUAD_SFX_ATTACH
                 endif
             endif
             
@@ -572,8 +572,8 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
     // Make enumerated units flee to random point
     private function FleeEnum takes nothing returns nothing
         local unit enumUnit = GetEnumUnit()
-        local real x = GetRandomReal(-squad_flee_distance, squad_flee_distance)
-        local real y = SquareRoot(Pow(squad_flee_distance, 2) - Pow(x, 2))
+        local real x = GetRandomReal(-SQUAD_FLEE_DISTANCE, SQUAD_FLEE_DISTANCE)
+        local real y = SquareRoot(Pow(SQUAD_FLEE_DISTANCE, 2) - Pow(x, 2))
         
         // y is always positive, allow for negative value
         if GetRandomInt(0, 1) == 0 then
@@ -607,8 +607,8 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
                 call SquadRemoveUnit(squad, dyingUnit)
                 
                 // Chance the squad disbands
-                if squad_disband_multiplier/squad_size >= GetRandomInt(1, 100) or (leader_death_disband and isLeader) then
-                    if squad_flee_distance > 0 then
+                if SQUAD_DISBAND_MULTIPLIER/squad_size >= GetRandomInt(1, 100) or (LEADER_DEATH_DISBAND and isLeader) then
+                    if SQUAD_FLEE_DISTANCE > 0 then
                         call GroupAddGroup(squad_copy, pauseGroupOrder)
                         call ForGroup(squad_copy, function FleeEnum)
                         call GroupRemoveGroup(squad_copy, pauseGroupOrder)
@@ -660,7 +660,7 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
             return false
         endif
 
-        set maxRange = squad_combat_overextension_distance + 30 * squadSize
+        set maxRange = SQUAD_COMBAT_OVEREXTENSION_DISTANCE + 30 * squadSize
         set distantMeleeMembers = SquadUtils.GetDistantGroupMembers(squadMember, squad, maxRange, false)
         set distantRangedMembers = SquadUtils.GetDistantGroupMembers(squadMember, squad, maxRange * 1.25, true)
 
@@ -695,7 +695,7 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
 
         // commented this for now it has a problem with archers in a squad
         //if squad != null then
-        //    if SquadUtils.GetMaxDistanceBetweenUnits(squad) > squad_combat_overextension_distance + squadSize * 30 then
+        //    if SquadUtils.GetMaxDistanceBetweenUnits(squad) > SQUAD_COMBAT_OVEREXTENSION_DISTANCE + squadSize * 30 then
         //        call GroupTargetOrder(squad, "attack", GetTriggerUnit())
         //    endif
         //endif
@@ -745,7 +745,7 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
             call TriggerRegisterPlayerUnitEvent(trgSquadPointOrder, indexPlayer, EVENT_PLAYER_UNIT_ISSUED_POINT_ORDER, null)
             call TriggerRegisterPlayerUnitEvent(trgUnitDies, indexPlayer, EVENT_PLAYER_UNIT_DEATH, null)
             call TriggerRegisterPlayerUnitEvent(trgUnitAttacked, indexPlayer, EVENT_PLAYER_UNIT_ATTACKED, null)
-            if squad_shared_damage_enabled == true then
+            if SQUAD_SHARED_DAMAGE_ENABLED == true then
               call TriggerRegisterPlayerUnitEvent(trgUnitDamaging, indexPlayer, EVENT_PLAYER_UNIT_DAMAGING, null)
             endif
 
@@ -761,7 +761,7 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
         call TriggerAddCondition(trgSquadPointOrder, function SquadPointOrder)
         call TriggerAddCondition(trgUnitDies, function UnitDies)
         call TriggerAddCondition(trgUnitAttacked, function UnitAttacked)
-        if squad_shared_damage_enabled == true then
+        if SQUAD_SHARED_DAMAGE_ENABLED == true then
           call TriggerAddCondition(trgUnitDamaging, function UnitDamaging)
         endif
         

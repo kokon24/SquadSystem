@@ -30,7 +30,7 @@ library SquadUtils
     
             set i = 0 
             loop 
-                exitwhen i >= groupSize - 1 
+                exitwhen i >= groupSize 
             
                 set u1 = BlzGroupUnitAt(g, i) 
                 set j = i + 1 
@@ -71,7 +71,7 @@ library SquadUtils
             local real hp 
  
             loop 
-                exitwhen i >= groupSize 
+                exitwhen i >= groupSize
                 set u = BlzGroupUnitAt(g, i) 
                 set hp = GetUnitState(u, UNIT_STATE_LIFE) 
       
@@ -107,7 +107,7 @@ library SquadUtils
             endif 
  
             loop 
-                exitwhen i >= groupSize 
+                exitwhen i >= groupSize
                 set u = BlzGroupUnitAt(g, i) 
                 set totalHP = totalHP + GetUnitState(u, UNIT_STATE_LIFE) 
                 set i = i + 1 
@@ -165,6 +165,8 @@ library SquadUtils
             local integer appliedDamageSplitCount = 0 
             local real appliedDamageCurrent = 0
             local real appliedDamageTotal = 0
+            local real defenderLifeRatio
+            local real this_squad_shared_damage_activation_chance
         
             if groupSize < 2 then 
                 return 0.0
@@ -176,19 +178,29 @@ library SquadUtils
             if weaponType == WEAPON_TYPE_WHOKNOWS then 
                 return 0.0
             endif 
-            if GetRandomReal(0, 1) < squad_shared_damage_activation_chance then 
+
+            set defenderLife = GetUnitState(defender, UNIT_STATE_LIFE)
+            set defenderLifeRatio = defenderLife / GetUnitState(defender, UNIT_STATE_MAX_LIFE)
+
+            if groupSize > 2 then
+                set this_squad_shared_damage_activation_chance = SQUAD_SHARED_DAMAGE_ACTIVATION_CHANCE * 1.1
+            endif
+            if (defenderLifeRatio < 0.5) then
+                set this_squad_shared_damage_activation_chance = (SQUAD_SHARED_DAMAGE_ACTIVATION_CHANCE + 1.0) / 2
+            endif
+            if GetRandomReal(0, 1) < this_squad_shared_damage_activation_chance then 
                 return 0.0
             endif 
-            set defenderLife = GetUnitState(defender, UNIT_STATE_LIFE) 
+            
             set averageHpInSquad = GetAverageHPInGroup(squad) 
-            if defenderLife >= averageHpInSquad * 1.333 then 
+            if defenderLife >= averageHpInSquad * 1.35 then 
                 return 0.0
             elseif defenderLife >= averageHpInSquad * 1.1 and GetRandomInt(0, 2) == 2 then 
                 return 0.0
             endif 
-            set ratio = GetRandomReal(squad_min_percent_of_shared_damage, squad_max_percent_of_shared_damage) 
+            set ratio = GetRandomReal(SQUAD_MIN_PERCENT_OF_SHARED_DAMAGE, SQUAD_MAX_PERCENT_OF_SHARED_DAMAGE) 
             set sharedDamage = incomingDamage * ratio 
-            if sharedDamage < squad_min_amount_of_shared_damage then 
+            if sharedDamage < SQUAD_MIN_AMOUNT_OF_SHARED_DAMAGE then 
                 return 0.0
             endif 
 
@@ -230,6 +242,7 @@ library SquadUtils
             set defender = null 
             set squad = null 
             set currentUnit = null 
+
 
             return appliedDamageTotal
         endmethod 
