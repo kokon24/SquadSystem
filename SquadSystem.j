@@ -137,6 +137,7 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
         string SQUAD_LEADER_SFX_PATH = null
         string SQUAD_LEADER_SFX_ATTACH = "overhead"
         integer SQUAD_DISBAND_MULTIPLIER = 0
+        integer MIN_DISBANDABLE_SQUAD_SIZE = 3
         real SQUAD_FLEE_DISTANCE = 0
         real SQUAD_COMBAT_OVEREXTENSION_DISTANCE = 300
         boolean LEADER_DEATH_DISBAND = false
@@ -607,7 +608,7 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
                 call SquadRemoveUnit(squad, dyingUnit)
                 
                 // Chance the squad disbands
-                if SQUAD_DISBAND_MULTIPLIER/squad_size >= GetRandomInt(1, 100) or (LEADER_DEATH_DISBAND and isLeader) then
+                if squad_size <= MIN_DISBANDABLE_SQUAD_SIZE and (SQUAD_DISBAND_MULTIPLIER/squad_size >= GetRandomInt(1, 100) or (LEADER_DEATH_DISBAND and isLeader)) then
                     if SQUAD_FLEE_DISTANCE > 0 then
                         call GroupAddGroup(squad_copy, pauseGroupOrder)
                         call ForGroup(squad_copy, function FleeEnum)
