@@ -63,7 +63,7 @@
 //          - Chance that part of the incoming attack damage is distributed between other squad members
 //          - Default: 0.50 (50%)
 //
-//  *   real SQUAD_MAX_PERCENY_OF_SHARED_DAMAGE
+//  *   real SQUAD_MAX_PERCENT_OF_SHARED_DAMAGE
 //          - Direct defender damage is reduced up to SQUAD_MAX_PERCENT_OF_SHARED_DAMAGE
 //          - Shared damage does not cause death. Only DAMAGE_TYPE_NORMAL is split
 //          - Default: 0.60 (60%)
