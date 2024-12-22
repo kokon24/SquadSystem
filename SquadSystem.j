@@ -26,54 +26,53 @@
 //          - Default attachment point for special effect to attach to squad units
 //          - Default: "overhead"
 //
-//  *   string SQUAD_LEADER_SFX_PATH
+//  *   string SQAD_LEADER_SFX_PATH
 //          - Default path for special effect to attach to squad leader
 //          - Set to null to use same effect as regular squad members
 //          - Default: null
 //
-//  *   string SQUAD_LEADER_SFX_ATTACH
+//  *   string squad_leader_sfx_attach
 //          - Default attachment point for special effect to attach to squad leader
 //          - Default: "overhead"
 //
 //  *   integer SQUAD_DISBAND_MULTIPLIER
 //          - Multiplier that determines the chance of a squad disbanding when one of its units dies
-//          - Formula: SQUAD_DISBAND_MULTIPLIER/squad_size
+//          - Formula: squad_disband_multiplier/squad_size
+//          - E.g. 100: 50% chance when 2 units left, 33% chance when 3 units left
 //          - Set to 0 to disable disbanding
 //          - Default: 0
+//
+//  *   integer MIN_DISBANDABLE_SQUAD_SIZE
+//         - Default: 3
 //
 //  *   real SQUAD_FLEE_DISTANCE
 //          - Distance units of a disbanded squad will flee in a random direction
 //          - set to 0 to disable fleeing
 //          - Default: 0
 //
-//  *   real SQUAD_COMBAT_OVEREXTENSION_DISTANCE
+//  *   real SQAD_COMBAT_EVEREXTENSION_DISTANCE
 //          - Squad members will try to come closer to each other if they are too far away during comabat
 //          - Default: 300
-//            (+ 30 per unit)
+//            (+ 25 per unit. 4 units = 400)
 //
 //  *   boolean LEADER_DEATH_DISBAND
 //          - If true, squads will disband if their leader dies
 //          - Default: false
 //
-//  *   boolean SQUAD_SHARED_DAMAGE_ENABLED
-//          - damage will be shared via EVENT_PLAYER_UNIT_DAMAGING. If you use custom damage engines you may want to keep it disabled and call SquadUtils.ShareGroupDamage() manually
-//          - Default: true
-//
 //  *   real SQUAD_SHARED_DAMAGE_ACTIVATION_CHANCE
 //          - Chance that part of the incoming attack damage is distributed between other squad members
 //          - Default: 0.50 (50%)
 //
-//  *   real SQUAD_MAX_PERCENT_OF_SHARED_DAMAGE
+//  *   real SQUAD_MAX_PERCENY_OF_SHARED_DAMAGE
 //          - Direct defender damage is reduced up to SQUAD_MAX_PERCENT_OF_SHARED_DAMAGE
 //          - Shared damage does not cause death. Only DAMAGE_TYPE_NORMAL is split
-//          - Default: 0.50 (50%)
+//          - Default: 0.60 (60%)
 //
 //  *   real SQUAD_MIN_PERCENT_OF_SHARED_DAMAGE
-//          - Default: 0.25 (25%)
+//          - Default: 0.3 (30%)
 //
 //  *   real SQUAD_MIN_AMOUNT_OF_SHARED_DAMAGE
 //          - If shared damage is less than SQUAD_MIN_AMOUNT_OF_SHARED_DAMAGE it will not be deducted from the original defender
-//          - Don't set it to 0. Must have at least some positive value
 //          - Default: 3
 //
 //    * Functions *
@@ -137,7 +136,7 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
         string SQUAD_LEADER_SFX_PATH = null
         string SQUAD_LEADER_SFX_ATTACH = "overhead"
         integer SQUAD_DISBAND_MULTIPLIER = 0
-        integer MIN_DISBANDABLE_SQUAD_SIZE = 3
+        integer SQUAD_MIN_DISBANDABLE_SIZE = 3
         real SQUAD_FLEE_DISTANCE = 0
         real SQUAD_COMBAT_OVEREXTENSION_DISTANCE = 300
         boolean LEADER_DEATH_DISBAND = false
@@ -608,7 +607,7 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
                 call SquadRemoveUnit(squad, dyingUnit)
                 
                 // Chance the squad disbands
-                if squad_size <= MIN_DISBANDABLE_SQUAD_SIZE and (SQUAD_DISBAND_MULTIPLIER/squad_size >= GetRandomInt(1, 100) or (LEADER_DEATH_DISBAND and isLeader)) then
+                if squad_size <= SQUAD_MIN_DISBANDABLE_SIZE and (SQUAD_DISBAND_MULTIPLIER/squad_size >= GetRandomInt(1, 100) or (LEADER_DEATH_DISBAND and isLeader)) then
                     if SQUAD_FLEE_DISTANCE > 0 then
                         call GroupAddGroup(squad_copy, pauseGroupOrder)
                         call ForGroup(squad_copy, function FleeEnum)
