@@ -1,6 +1,6 @@
 //===========================================================================
 //
-//  Squad System v0.9.6
+//  Squad System v0.9.7
 //  by loktar and kokon
 //
 //    -------
@@ -31,7 +31,7 @@
 //          - Set to null to use same effect as regular squad members
 //          - Default: null
 //
-//  *   string squad_leader_sfx_attach
+//  *   string SQUAD_LEADER_SFX_ATTACH
 //          - Default attachment point for special effect to attach to squad leader
 //          - Default: "overhead"
 //
