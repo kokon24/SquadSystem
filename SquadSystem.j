@@ -38,7 +38,7 @@
 //  *   integer SQUAD_DISBAND_MULTIPLIER
 //          - Multiplier that determines the chance of a squad disbanding when one of its units dies
 //          - Formula: squad_disband_multiplier/squad_size
-//          - E.g. 100: 50% chance when 2 units left, 33% chance when 3 units left
+//          - E.g. 100: 50 percent chance when 2 units left, 33 percent chance when 3 units left
 //          - Set to 0 to disable disbanding
 //          - Default: 0
 //
@@ -287,8 +287,8 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
     endfunction
     
     // Create squad from unit
-    function UnitCreateSquad takes unit whichUnit returns nothing
-        local group squad
+    function UnitCreateSquad takes unit whichUnit returns group
+        local group squad = null
         local player owningPlayer
         local integer typeId
         local real x
@@ -325,8 +325,8 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
             endif
         endif
         
-        set squad = null
         set owningPlayer = null
+        return squad
     endfunction
     
     // Create a squad with units of type for player
