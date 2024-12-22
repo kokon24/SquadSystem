@@ -39,31 +39,29 @@ library SquadUtils
                 
                     set u2 = BlzGroupUnitAt(g, j) 
                 
-                    set dx = GetUnitX(u2) -GetUnitX(u1) 
-                    set dy = GetUnitY(u2) -GetUnitY(u1) 
-                    set distance = SquareRoot(dx * dx + dy * dy) 
+                    set dx = GetUnitX(u2) - GetUnitX(u1) 
+                    set dy = GetUnitY(u2) - GetUnitY(u1) 
+                    set distance = dx * dx + dy * dy
                 
-                    if distance > maxDistance then 
-                        set maxDistance = distance 
-                    endif 
+                    if distance > maxDistance then
+                        set maxDistance = distance
+                    endif
+                    
+                    set j = j + 1
+                endloop
                 
-                    set j = j + 1 
-                endloop 
+                set i = i + 1
+            endloop
             
-                set i = i + 1 
-            endloop 
+            set u1 = null
+            set u2 = null
         
-            set u1 = null 
-            set u2 = null 
-
-            call BJDebugMsg("maxDistance" + R2S(maxDistance)) 
-    
-            return maxDistance 
+            return SquareRoot(maxDistance)
         endmethod 
  
         // By kokon 
         static method GetIndexOfLowestHPUnit takes group g returns integer 
-            local integer lowestIndex = -1 
+            local integer lowestIndex = - 1 
             local real lowestHP = 99999999.0 
             local integer i = 0 
             local integer groupSize = BlzGroupGetSize(g) 
@@ -185,8 +183,8 @@ library SquadUtils
             if groupSize > 2 then
                 set this_squad_shared_damage_activation_chance = SQUAD_SHARED_DAMAGE_ACTIVATION_CHANCE * 1.1
             endif
-            if (defenderLifeRatio < 0.5) then
-                set this_squad_shared_damage_activation_chance = (SQUAD_SHARED_DAMAGE_ACTIVATION_CHANCE + 1.0) / 2
+            if(defenderLifeRatio < 0.5) then
+                set this_squad_shared_damage_activation_chance =(SQUAD_SHARED_DAMAGE_ACTIVATION_CHANCE + 1.0) / 2
             endif
             if GetRandomReal(0, 1) < this_squad_shared_damage_activation_chance then 
                 return 0.0
@@ -214,7 +212,7 @@ library SquadUtils
                     set currentIndex = GetRandomInt(0, groupSize - 1) 
                     set currentUnit = BlzGroupUnitAt(squad, currentIndex) 
                     if currentUnit != defender and GetUnitState(currentUnit, UNIT_STATE_LIFE) > sharedDamage then 
-                        set skipChance = (1 - GetUnitState(currentUnit, UNIT_STATE_LIFE) / GetUnitState(currentUnit, UNIT_STATE_MAX_LIFE)) 
+                        set skipChance =(1 - GetUnitState(currentUnit, UNIT_STATE_LIFE) / GetUnitState(currentUnit, UNIT_STATE_MAX_LIFE)) 
                         if GetIndexOfLowestHPUnit(squad) == currentIndex then 
                             set skipChance = skipChance + 0.20 
                         endif 
