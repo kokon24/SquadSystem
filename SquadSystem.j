@@ -1,6 +1,6 @@
 //===========================================================================
 //
-//  Squad System v0.9.7
+//  Squad System v0.9.8
 //  by loktar and kokon
 //
 //    -------
@@ -14,7 +14,7 @@
 //  *   integer array squadSize
 //          - Squad size for squads generated with squadUnits
 //
-//  *   integer SQAD_MAX_UNIT_COUNT
+//  *   integer SQUAD_MAX_UNIT_COUNT
 //          - Maximum index of squadUnits and squadSize
 //
 //  *   string SQUAD_SFX_PATH
@@ -130,7 +130,7 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
         // Config
         integer array squadUnits
         integer array squadSize
-        integer SQAD_MAX_UNIT_COUNT = -1
+        integer SQUAD_MAX_UNIT_COUNT = -1
         string SQUAD_SFX_PATH = null
         string SQUAD_SFX_ATTACH = "overhead"
         string SQUAD_LEADER_SFX_PATH = null
@@ -298,13 +298,13 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
         local integer index = 0
         local integer size_index = 0
         
-        if SQAD_MAX_UNIT_COUNT >= 0 then
+        if SQUAD_MAX_UNIT_COUNT >= 0 then
             set typeId = GetUnitTypeId(whichUnit)
             
             loop
                 set isSquadUnit = squadUnits[index] == typeId
                 set index = index + 1
-                exitwhen index > SQAD_MAX_UNIT_COUNT or isSquadUnit
+                exitwhen index > SQUAD_MAX_UNIT_COUNT or isSquadUnit
             endloop
             
             if isSquadUnit then
