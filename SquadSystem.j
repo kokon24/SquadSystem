@@ -26,7 +26,7 @@
 //          - Default attachment point for special effect to attach to squad units
 //          - Default: "overhead"
 //
-//  *   string SQAD_LEADER_SFX_PATH
+//  *   string SQUAD_LEADER_SFX_PATH
 //          - Default path for special effect to attach to squad leader
 //          - Set to null to use same effect as regular squad members
 //          - Default: null
@@ -50,7 +50,7 @@
 //          - set to 0 to disable fleeing
 //          - Default: 0
 //
-//  *   real SQAD_COMBAT_EVEREXTENSION_DISTANCE
+//  *   real SQUAD_COMBAT_EVEREXTENSION_DISTANCE
 //          - Squad members will try to come closer to each other if they are too far away during comabat
 //          - Default: 300
 //            (+ 25 per unit. 4 units = 400)
