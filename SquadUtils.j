@@ -12,7 +12,16 @@ library SquadUtils
             return result 
         endmethod
     
-        // By kokon 
+        static method GetUnitAttackRange takes unit u returns real
+            local real attackRange0 = BlzGetUnitWeaponRealField(u, UNIT_WEAPON_RF_ATTACK_RANGE, 0)
+            local real attackRange1 = BlzGetUnitWeaponRealField(u, UNIT_WEAPON_RF_ATTACK_RANGE, 1)
+            if attackRange0 > attackRange1 then
+                return attackRange0
+            else 
+                return attackRange1
+            endif
+        endmethod
+
         static method GetMaxDistanceBetweenUnits takes group g returns real 
             local unit u1 
             local unit u2 
@@ -56,10 +65,10 @@ library SquadUtils
             set u1 = null
             set u2 = null
         
+            call BJDebugMsg("maxDistance:" + R2S(maxDistance))
             return SquareRoot(maxDistance)
         endmethod 
  
-        // By kokon 
         static method GetIndexOfLowestHPUnit takes group g returns integer 
             local integer lowestIndex = - 1 
             local real lowestHP = 99999999.0 
@@ -85,7 +94,6 @@ library SquadUtils
             return lowestIndex 
         endmethod 
     
-        // By kokon 
         static method IsRangedUnit takes unit u returns boolean 
             if BlzGetUnitWeaponRealField(u, UNIT_WEAPON_RF_ATTACK_RANGE, 0) > 200 or BlzGetUnitWeaponRealField(u, UNIT_WEAPON_RF_ATTACK_RANGE, 1) > 200 then 
                 return true 
@@ -93,7 +101,6 @@ library SquadUtils
             return false 
         endmethod 
     
-        // By kokon 
         static method GetAverageHPInGroup takes group g returns real 
             local integer groupSize = BlzGroupGetSize(g) 
             local integer i = 0 
@@ -115,7 +122,6 @@ library SquadUtils
             return totalHP / groupSize 
         endmethod 
 
-        // By kokon 
         static method GetDistantGroupMembers takes unit primaryUnit, group sourceGroup, real distance, boolean isRanged returns group
             local group resultGroup = CreateGroup()
             local real primaryUnitX = GetUnitX(primaryUnit)
@@ -136,7 +142,9 @@ library SquadUtils
                     set currentDistance = SquareRoot(dx * dx + dy * dy)
         
                     if currentDistance > distance and IsRangedUnit(u) == isRanged then
-                        call GroupAddUnit(resultGroup, u)
+                        if currentDistance > GetUnitAttackRange(u) then
+                            call GroupAddUnit(resultGroup, u)
+                        endif                
                     endif
                 endif
         
@@ -147,7 +155,6 @@ library SquadUtils
             return resultGroup
         endmethod
     
-        // by kokon 
         // returns amount of damage that was distributed to other squad members
         static method ShareGroupDamage takes unit defender, group squad, real incomingDamage, attacktype attackType, damagetype damageType, weapontype weaponType returns real 
             local integer groupSize = BlzGroupGetSize(squad) 

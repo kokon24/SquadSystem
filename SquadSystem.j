@@ -652,7 +652,7 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
         local group distantRangedMembers
         local string order
 
-        if squadSize > 1 then
+        if squadSize <= 1 then
             return false
         endif
 
@@ -662,7 +662,8 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
 
         set maxRange = SQUAD_COMBAT_OVEREXTENSION_DISTANCE + 30 * squadSize
         set distantMeleeMembers = SquadUtils.GetDistantGroupMembers(squadMember, squad, maxRange, false)
-        set distantRangedMembers = SquadUtils.GetDistantGroupMembers(squadMember, squad, maxRange * 1.25, true)
+            
+        set distantRangedMembers = SquadUtils.GetDistantGroupMembers(squadMember, squad, maxRange, true)
 
         loop
             exitwhen i > BlzGroupGetSize(distantMeleeMembers)
@@ -691,14 +692,6 @@ library SquadSystem initializer InitSquadSystem requires SquadUtils
         set squad = null
         
         return false
-
-
-        // commented this for now it has a problem with archers in a squad
-        //if squad != null then
-        //    if SquadUtils.GetMaxDistanceBetweenUnits(squad) > SQUAD_COMBAT_OVEREXTENSION_DISTANCE + squadSize * 30 then
-        //        call GroupTargetOrder(squad, "attack", GetTriggerUnit())
-        //    endif
-        //endif
         
     endfunction
 
