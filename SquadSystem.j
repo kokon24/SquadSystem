@@ -50,7 +50,7 @@
 //          - set to 0 to disable fleeing
 //          - Default: 0
 //
-//  *   real SQUAD_COMBAT_EVEREXTENSION_DISTANCE
+//  *   real SQUAD_COMBAT_OVEREXTENSION_DISTANCE
 //          - Squad members will try to come closer to each other if they are too far away during comabat
 //          - Default: 300
 //            (+ 25 per unit. 4 units = 400)
