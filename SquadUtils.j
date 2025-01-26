@@ -65,7 +65,7 @@ library SquadUtils
             set u1 = null
             set u2 = null
         
-            call BJDebugMsg("maxDistance:" + R2S(maxDistance))
+            //call BJDebugMsg("maxDistance:" + SquareRoot(R2S(maxDistance)))
             return SquareRoot(maxDistance)
         endmethod 
  
